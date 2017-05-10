@@ -12,6 +12,27 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/styleP.css">
+
+    <script src="/valid-sign-up.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+           var nameId ='<%- JSON.stringify(commentName) %>';
+           arrNameId = (JSON.parse(nameId));
+           arrNameId.forEach(function (elm) {
+                $('.'+elm._id).text(elm.name)
+            });
+            var userName = '<%= userName %>';
+            if (userName) {
+                $('form[action="/sign-in"]').addClass('hidden');
+                var form = '<form class="form-inline" action="/sign-out" method="post"><p class="form-control-static">'+userName+'</p><button type="submit" class="btn btn-primary">Sign out</button></form>';
+                $('.liForForm').append(form);
+            }
+            console.log(userName)
+        });
+    </script>
+
 </head>
 <body>
 <header>
@@ -25,33 +46,86 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Blog</a>
+                <a class="navbar-brand" href="/">Blog</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><button type="button" class="btn btn-default navbar-btn">Sign in</button></li>
-                    <li><button type="button" class="btn btn-default navbar-btn">Sign up</button></li>
+                    <li class="liForForm">
+                        <form class="form-inline" action="/sign-in" method="post">
+                            <div class="form-group">
+                                <label class="sr-only" for="emailForSignin">Email address</label>
+                                <input name="email" type="email" class="form-control" id="emailForSignin" placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="passForSignin">Password</label>
+                                <input name="password" type="password" class="form-control" id="passForSignin" placeholder="Password" pattern=".{6,}" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sign in</button>
+                        </form>
+                    </li>
+                    <li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal"data-target="#sign-up">Sign up</button></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
+
+    <!-- Modal sign-up -->
+    <div class="modal fade" id="sign-up" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Sign up</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group divName">
+                            <label for="name">Name: </label>
+                            <input type="text" class="form-control" id="name" placeholder="Name">
+                        </div>
+                        <div class="form-group divAge">
+                            <label for="age">Age: </label>
+                            <input type="number" class="form-control" id="age" placeholder="Age">
+                        </div>
+                        <div class="form-group divEmail">
+                            <label for="email">Email: </label>
+                            <input type="email" class="form-control" id="email" placeholder="Email">
+                        </div>
+                        <div class="form-group divPass">
+                            <label for="password">Password: </label>
+                            <input type="password" class="form-control" id="password" placeholder="Password">
+                        </div>
+                        <div class="form-group divRepass">
+                            <label for="rePassword">re-Password: </label>
+                            <input type="password" class="form-control" id="rePassword" placeholder="re-Password">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary submit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
-<section>
+<section class="main">
     <h2> <%= post[0].title %> </h2>
     <% var date =  post[0].date %>
-    <span> <%= name[0].name %> </span>
-    <small><%= new Date(date) %></small>
+    <small> <%= name %> , </small>
+    <small><%= new Date(date).toUTCString() %></small>
     <p> <%= post[0].about %> </p>
-    <small> <%= post[0].tags %> </small>
-    <div>
-        <% post[0].comments.forEach(function (elm, key) { %>
+    <small> Tags: <%= post[0].tags %> </small>
+    <div class="divComments">
+        <span class="spanComments"> Comments: </span>
+        <% post[0].comments.forEach(function (elmC) { %>
             <div>
-                <h4> <%= commentName[key] %> </h4>
-                <% var date =  elm.date %>
+                <h4 class="<%= elmC.author %>"></h4>
+                <% var date = elmC.date %>
                 <small><%= new Date(date).toUTCString() %></small>
-                <p> <%= elm.text %> </p>
+                <p> <%= elmC.text %> </p>
             </div>
         <% }) %>
     </div>

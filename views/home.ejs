@@ -12,6 +12,29 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/styleH.css">
+
+<script src="/valid-sign-up.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$(".page<%= numOfPage %>").addClass("active");
+		if ($(".active").prop('class') == $(".page1").prop("class")) {
+            $(".pagination>li:first-child").addClass("disabled")
+            $(".pagination>li:first-child>a").prop("href", "#")
+		}
+        if ($(".active").prop('class') == $(".last").prop("class")) {
+            $(".pagination>li:last-child").addClass("disabled")
+            $(".pagination>li:last-child>a").prop("href", "#")
+        }
+        var userName = '<%= userName %>';
+        if (userName != false) {
+            $('form[action="/sign-in"]').addClass('hidden');
+            var form = '<form class="form-inline" action="/sign-out" method="post"><p class="form-control-static">'+userName+'</p><button type="submit" class="btn btn-primary">Sign out</button></form>';
+			$('.liForForm').append(form);
+        }
+    })
+</script>
+
 </head>
 <body>
 	<header>
@@ -25,40 +48,116 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">Blog</a>
+					<a class="navbar-brand" href="/">Blog</a>
 				</div>
 
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav navbar-right">
-						<li><button type="button" class="btn btn-default navbar-btn">Sign in</button></li>
-						<li><button type="button" class="btn btn-default navbar-btn">Sign up</button></li>
+						<li class="liForForm">
+							<form class="form-inline" action="/sign-in" method="post">
+								<div class="form-group">
+									<label class="sr-only" for="emailForSignin">Email address</label>
+									<input name="email" type="email" class="form-control" id="emailForSignin" placeholder="Email" required>
+								</div>
+								<div class="form-group">
+									<label class="sr-only" for="passForSignin">Password</label>
+									<input name="password" type="password" class="form-control" id="passForSignin" placeholder="Password" pattern=".{6,}" required>
+								</div>
+								<button type="submit" class="btn btn-primary">Sign in</button>
+							</form>
+						</li>
+						<li><button type="button" class="btn btn-default navbar-btn" data-toggle="modal"data-target="#sign-up">Sign up</button></li>
 					</ul>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
 		</nav>
-	</header>
-	<section>
-		<% data.forEach(function (elm) { %>
-		<a href="/posts/<%= elm._id %>">
-			<div>
-				<h4><%= elm.title %></h4>
-				<span>
-					<% var date =  elm.date %>
-					<small><%= new Date(date).toUTCString() %></small>
-					<br>
-					<small><%= elm.tags%></small>
-				</span>
-				<div>
-					<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-					<%= elm.comments.length %>
+
+		<!-- Modal sign-up -->
+		<div class="modal fade" id="sign-up" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Sign up</h4>
+					</div>
+					<div class="modal-body">
+						<form>
+							<div class="form-group divName">
+								<label for="name">Name: </label>
+								<input type="text" class="form-control" id="name" placeholder="Name">
+							</div>
+							<div class="form-group divAge">
+								<label for="age">Age: </label>
+								<input type="number" class="form-control" id="age" placeholder="Age">
+							</div>
+							<div class="form-group divEmail">
+								<label for="email">Email: </label>
+								<input type="email" class="form-control" id="email" placeholder="Email">
+							</div>
+							<div class="form-group divPass">
+								<label for="password">Password: </label>
+								<input type="password" class="form-control" id="password" placeholder="Password">
+							</div>
+							<div class="form-group divRepass">
+								<label for="rePassword">re-Password: </label>
+								<input type="password" class="form-control" id="rePassword" placeholder="re-Password">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary submit">Submit</button>
+					</div>
 				</div>
 			</div>
+		</div>
+	</header>
+	<section class="main">
+		<% data.forEach(function (elm) { %>
+		<a href="/posts/<%= elm._id %>">
+			<center>
+				<div>
+					<h4><%= elm.title %></h4>
+					<span>
+						<% var date =  elm.date %>
+						<small> Published: <%= new Date(date).toUTCString() %></small>
+						<br>
+						<small> Tags: <%= elm.tags%></small>
+					</span>
+					<p> <%= elm.shortAbout %> </p>
+					<div>
+						<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+						<%= elm.comments.length %>
+					</div>
+				</div>
+			</center>
 		</a>
 		<% }) %>
 	</section>
-	<section>
-		<%  %>
+	<section class="pagi">
+		<nav aria-label="Page navigation">
+			<ul class="pagination">
+				<li>
+					<a href="/page/prev" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+                <% var count = Math.ceil(numOfPosts/10) %>
+				<% for (var i = 1; i <= count; i++) { %>
+					<% if (i == count) { %>
+						<li class="last page<%= i %>"><a href="/pages/<%= i %>"><%= i %></a></li>
+					<% }else {%>
+						<li class="page<%= i %>"><a href="/pages/<%= i %>"><%= i %></a></li>
+					<% } %>
+				<% } %>
+				<li>
+					<a href="/page/next" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
 	</section>
 	<footer>
 		<span>footer</span>
