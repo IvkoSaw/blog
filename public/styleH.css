@@ -1,0 +1,37 @@
+.main{
+    padding-left: 20px;
+    width: 70%;
+    margin:0 auto;
+}
+a{
+    color: black;
+}
+a:hover{
+    text-decoration: none;
+}
+.main h4{
+    font-size: 30px;
+}
+.navbar-btn{
+    margin-left:5px;
+}
+center{
+    border: solid 1px black;
+    margin-bottom: 1px;
+}
+.pagi{
+    text-align: -webkit-center;
+}
+#myModalLabel{
+    text-align: -webkit-center;
+}
+form[action="/sign-in"], form[action="/sign-out"]{
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.hidden{
+    display: none;
+}
+p[class="form-control-static"]{
+    margin-right: 10px;
+}

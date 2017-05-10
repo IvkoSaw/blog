@@ -1,0 +1,32 @@
+.main{
+    padding-left: 20px;
+    width: 70%;
+    margin:0 auto;
+}
+.navbar-btn{
+    margin-left:5px;
+}
+h2{
+    font-size: 40px;
+    text-align: -webkit-center;
+    margin-bottom: 30px;
+}
+.spanComments{
+    font-size: 25px;
+}
+.divComments{
+    padding-top: 30px;
+}
+#myModalLabel{
+    text-align: -webkit-center;
+}
+form[action="/sign-in"],form[action="/sign-out"]{
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.hidden{
+    display: none;
+}
+p[class="form-control-static"]{
+    margin-right: 10px;
+}
